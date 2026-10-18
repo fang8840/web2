@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zapatería Aysel</title>
+  <!-- Google Fonts: Cormorant Garamond / Playfair Display for Editorial Serif, Plus Jakarta Sans for clean UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --navy-dark: #08182b;
+      --navy-text: #0b1d35;
+      --navy-sub: #1e3553;
+      --border-subtle: rgba(11, 29, 53, 0.12);
+      --border-pill: rgba(11, 29, 53, 0.35);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #062238;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--navy-text);
+      user-select: none;
+    }
+
+    #eyeLoading {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: grid;
+      place-content: center;
+      justify-items: center;
+      gap: 26px;
+      background: #000;
+      opacity: 1;
+      transition: opacity 0.6s ease;
+    }
+
+    #eyeLoading.out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #eyeLoading .loading-brand {
+      color: #f4f2ef;
+      font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(28px, 4.4vw, 52px);
+      font-weight: 400;
+      letter-spacing: 0.005em;
+      opacity: 0;
+      animation: loadingRiseIn 1.25s cubic-bezier(.22, .61, .36, 1) 0.15s forwards;
+    }
+
+    #eyeLoading .loading-bar {
+      width: clamp(120px, 17vw, 210px);
+      height: 1px;
+      overflow: hidden;
+      background: rgba(244, 242, 239, 0.16);
+    }
+
+    #eyeLoading .loading-bar-fill {
+      display: block;
+      width: 100%;
+      height: 100%;
+      transform: scaleX(0);
+      transform-origin: left center;
+      background: #f4f2ef;
+      transition: transform 0.55s cubic-bezier(.22, .61, .36, 1);
+    }
+
+    #eyeLoading.loaded .loading-bar-fill {
+      transform: scaleX(1);
+    }
+
+    #eyeLoading .loading-caption {
+      color: rgba(244, 242, 239, 0.48);
+      font-size: 10px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: loadingRiseIn 0.9s cubic-bezier(.22, .61, .36, 1) 0.7s forwards;
+    }
+
+    @keyframes loadingRiseIn {
+      from { opacity: 0; transform: translateY(9px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    #eyeIntro {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      background: #000;
+      opacity: 1;
+      transition: opacity 1.25s ease;
+    }
+
+    #eyeIntro video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+
+    #eyeIntro .fallback {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 50% 48%, #123d67 0%, #061a30 42%, #000 78%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    #eyeIntro.no-video .fallback {
+      opacity: 1;
+    }
+
+    .intro-eye {
+      position: relative;
+      width: clamp(150px, 32vw, 420px);
+      aspect-ratio: 2 / 1;
+      border-radius: 50%;
+      background: #d7e8f5;
+      clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%);
+      animation: eyeOpen 1.2s cubic-bezier(.22, .61, .36, 1) both;
+    }
+
+    .intro-iris {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 37%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, #020912 0 24%, #0a2845 26% 38%, #38a5d1 42% 52%, #123c64 63%, #061a30 75%);
+      box-shadow: 0 0 34px rgba(65, 176, 229, 0.5);
+    }
+
+    @keyframes eyeOpen {
+      from { transform: scaleY(0.04); }
+      to { transform: scaleY(1); }
+    }
+
+    #eyeIntro::after {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: #000;
+      content: "";
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+    }
+
+    #eyeIntro.closing::after {
+      opacity: 1;
+    }
+
+    #eyeIntro.gone {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #eyeIntro .skip-intro {
+      position: absolute;
+      right: 28px;
+      bottom: 28px;
+      z-index: 2;
+      min-height: 44px;
+      padding: 10px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.18);
+      color: rgba(255, 255, 255, 0.82);
+      font: inherit;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+    }
+
+    #eyeIntro.closing .skip-intro {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #eyeLoading,
+      #eyeIntro,
+      #eyeIntro::after {
+        transition-duration: 0.2s;
+      }
+
+      #eyeLoading .loading-brand,
+      #eyeLoading .loading-caption {
+        animation-duration: 0.2s;
+      }
+
+      #eyeLoading .loading-bar-fill {
+        transition-duration: 0.2s;
+      }
+
+      .intro-eye {
+        animation-duration: 0.2s;
+      }
+    }
+
+    /* ==========================================
+       LAYER ARCHITECTURE (MATCHING VIDEO Z-DEPTH)
+       ========================================== */
+    .viewport-Wrapper {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Layer 1: Background Sky & Base Scene Canvas */
+    #bgCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Layer 2: Hero Typography & Secondary Button (Submerges & refracts behind the wave) */
+    .submersible-ui-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      pointer-events: none;
+      transition: filter 0.1s linear;
+      will-change: transform, filter, opacity;
+    }
+
+    .submersible-ui-layer a,
+    .submersible-ui-layer button {
+      pointer-events: auto;
+    }
+
+    /* Layer 3: Foreground Ocean Wave & Underwater Meniscus Overlay Canvas
+       Sits OVER the typography, but UNDER the primary CTA button */
+    #fgWaveCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    /* Layer 4: Always-On-Top Crisp UI (Primary CTA button, Top Bar, Bottom Bar) */
+    .topmost-ui-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .topmost-ui-layer a,
+    .topmost-ui-layer button,
+    .topmost-ui-layer .interactive-ctrl {
+      pointer-events: auto;
+    }
+
+    /* ==========================================
+       TYPOGRAPHY & EXACT LAYOUT SPECIFICATIONS
+       ========================================== */
+    .top-notification-bar {
+      width: 100%;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(11, 29, 53, 0.1);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      color: var(--navy-text);
+      transition: color 0.6s ease, border-color 0.6s ease;
+    }
+
+    .top-notification-bar.underwater-mode {
+      color: rgba(255, 255, 255, 0.9);
+      border-bottom-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .submersible-ui-layer.underwater-mode .brand-logo,
+    .submersible-ui-layer.underwater-mode .nav-link,
+    .submersible-ui-layer.underwater-mode .nav-cta-pill,
+    .submersible-ui-layer.underwater-mode .eyebrow-text,
+    .submersible-ui-layer.underwater-mode .hero-heading,
+    .submersible-ui-layer.underwater-mode .hero-subheading {
+      color: #ffffff;
+    }
+
+    .submersible-ui-layer.underwater-mode .nav-cta-pill {
+      border-color: rgba(255, 255, 255, 0.7);
+    }
+
+    .main-navbar {
+      width: 100%;
+      padding: 24px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: var(--navy-text);
+      transition: color 0.5s ease, opacity 0.4s ease;
+    }
+
+    .brand-logo-text {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+
+    .nav-center-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      transform: translateX(12px);
+    }
+
+    .nav-link {
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--navy-text);
+      letter-spacing: 0.01em;
+      transition: opacity 0.25s ease, color 0.5s ease;
+    }
+
+    .nav-link:hover {
+      opacity: 0.65;
+    }
+
+    .nav-cta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(11, 29, 53, 0.38);
+      background: transparent;
+      color: var(--navy-text);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .nav-cta-pill:hover {
+      background: rgba(11, 29, 53, 0.06);
+      border-color: var(--navy-text);
+    }
+
+    /* Hero Content Block */
+    .hero-section {
+      flex: 1;
+      display: flex;
+       flex-direction: column;
+      justify-content: center;
+      padding-left: 60px;
+      padding-right: 60px;
+      margin-top: -42px; /* Vertically centered slightly above middle as in video */
+    }
+
+    .eyebrow-text {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.23em;
+      color: var(--navy-text);
+      margin-bottom: 18px;
+      transition: color 0.6s ease;
+    }
+
+    .hero-heading {
+      font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(58px, 6.2vw, 88px);
+      font-weight: 400;
+      line-height: 1.02;
+      letter-spacing: -0.015em;
+      color: var(--navy-text);
+      margin-bottom: 24px;
+      transition: color 0.6s ease;
+    }
+
+    .hero-subheading {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(16px, 1.3vw, 18.5px);
+      font-weight: 400;
+      line-height: 1.52;
+      color: var(--navy-sub);
+      margin-bottom: 36px;
+      letter-spacing: -0.005em;
+      transition: color 0.6s ease;
+    }
+
+    .cta-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      height: 50px;
+    }
+
+    /* Primary Button (Lives on Topmost Layer 4 so water passes behind it!) */
+    .btn-primary-ocean {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background-color: var(--navy-dark);
+      color: #ffffff;
+      padding: 15px 28px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 28px -6px rgba(8, 24, 43, 0.35);
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .btn-primary-ocean:hover {
+      background-color: #0d2440;
+      transform: translateY(-1px);
+      box-shadow: 0 14px 32px -6px rgba(8, 24, 43, 0.45);
+    }
+
+    .btn-primary-ocean:active {
+      transform: translateY(0);
+    }
+
+    /* Invisible placeholder in Layer 2 to preserve exact spacing for Secondary Button */
+    .btn-primary-placeholder {
+      width: 194px;
+      height: 50px;
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    /* Bottom Controls Bar */
+    .bottom-bar {
+      width: 100%;
+      padding: 0 60px 32px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #ffffff;
+    }
+
+    .live-at-sea-ctrl {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .pause-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      background: rgba(8, 24, 43, 0.18);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+    }
+
+    .live-at-sea-ctrl:hover .pause-circle {
+      border-color: rgba(255, 255, 255, 0.85);
+      background: rgba(8, 24, 43, 0.35);
+      transform: scale(1.05);
+    }
+
+    .bottom-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.92);
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .scroll-explore-ctrl {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      cursor: pointer;
+      transition: opacity 0.25s ease;
+    }
+
+    .scroll-explore-ctrl:hover {
+      opacity: 0.8;
+    }
+
+    @keyframes subtleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(3px); }
+    }
+
+    .bounce-arrow {
+      animation: subtleBounce 2.2s infinite ease-in-out;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .main-navbar {
+        padding: 20px 28px;
+      }
+      .nav-center-links {
+        display: none;
+      }
+      .hero-section {
+        padding-left: 28px;
+        padding-right: 28px;
+      }
+      .bottom-bar {
+        padding: 0 28px 24px 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="eyeLoading" role="status" aria-live="polite" aria-label="Cargando animación">
+    <div class="loading-brand">Zapatería Aysel</div>
+    <div class="loading-bar" aria-hidden="true"><span class="loading-bar-fill" id="eyeLoadingBar"></span></div>
+    <div class="loading-caption">Preparando la experiencia</div>
+  </div>
+
+  <div id="eyeIntro" aria-label="Eye intro animation">
+    <video
+      id="eyeIntroFilm"
+      src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260922_195107_ed3f055a-3a13-4a71-b743-e10310454246.mp4"
+      muted
+      playsinline
+      preload="auto"
+      disablepictureinpicture
+      aria-hidden="true"
+    ></video>
+    <div class="fallback" aria-hidden="true">
+      <div class="intro-eye"><span class="intro-iris"></span></div>
+    </div>
+    <button class="skip-intro" id="skipEyeIntro" type="button">Skip</button>
+  </div>
+
+  <!-- SVG Filters for Realistic Underwater Text Refraction & Meniscus Distortion -->
+  <svg style="position: absolute; width: 0; height: 0; pointer-events: none;" aria-hidden="true">
+    <defs>
+      <filter id="water-refraction-filter" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence id="refractTurbulence" type="fractalNoise" baseFrequency="0.012 0.028" numOctaves="2" seed="3" result="noise" />
+        <feDisplacementMap id="refractDisplacement" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="viewport-Wrapper" id="appViewport">
+    
+    <!-- LAYER 1: WebGL Shader Canvas (Renders Sky, Golden Sun, Horizon Waves & Underwater God-Rays) -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- LAYER 2: Submersible Content (Navbar and Hero Text) -->
+    <div class="submersible-ui-layer" id="submersibleLayer">
+      <!-- Top Header Group -->
+      <div>
+        <!-- Spacer for top notification bar (rendered in topmost layer for legibility) -->
+        <div style="height: 38px;"></div>
+
+        <!-- Main Navigation Bar -->
+        <nav class="main-navbar">
+          <a href="#ocean" class="brand-logo" id="brandLogo">
+            <!-- Minimalist Double-Wave SVG Icon -->
+            <svg width="28" height="14" viewBox="0 0 28 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 4.5C4.2 1.2 7.8 1.2 11 4.5C14.2 7.8 17.8 7.8 21 4.5C23.2 2.3 25.5 1.8 27 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M1 9.8C4.2 6.5 7.8 6.5 11 9.8C14.2 13.1 17.8 13.1 21 9.8C23.2 7.6 25.5 7.1 27 8.3" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" opacity="0.75"/>
+            </svg>
+          </a>
+
+          <div class="nav-center-links" id="navLinks">
+            <a href="#discover" class="nav-link" onclick="triggerSubmersionWave(event)">Discover</a>
+            <a href="#story" class="nav-link" onclick="triggerSubmersionWave(event)">Our story</a>
+            <a href="#journal" class="nav-link" onclick="triggerSubmersionWave(event)">Journal</a>
+          </div>
+
+          <a href="https://canva.link/ohcsrlcldvikukb" class="nav-cta-pill" id="navCtaPill" target="_blank" rel="noopener noreferrer">
+            <span>Explore now</span>
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2.5 9.5L9.5 2.5M9.5 2.5H3.5M9.5 2.5V8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Center Left Hero Content -->
+      <main class="hero-section" id="heroTextContainer">
+        <p class="eyebrow-text">FEEL THE WORLD SLOW DOWN</p>
+        <h1 class="hero-heading">Zapatería Aysel</h1>
+
+        <div class="cta-row">
+          <!-- Invisible spacer matching the exact size of the Primary Button on Layer 4 -->
+          <div class="btn-primary-placeholder" id="primaryBtnPlaceholder"></div>
+
+        </div>
+      </main>
+
+      <!-- Bottom spacer -->
+      <div style="height: 70px;"></div>
+    </div>
+
+    <!-- LAYER 3: Foreground Meniscus Wave & Water Droplets / Foam Overlay
+         Passes OVER the hero text, but UNDER the solid navy primary button -->
+    <canvas id="fgWaveCanvas"></canvas>
+
+    <!-- LAYER 4: Topmost Crisp UI Layer (Top bar, Primary CTA, Bottom Bar) -->
+    <div class="topmost-ui-layer">
+      <!-- 1. Top Notification Bar -->
+      <div class="top-notification-bar" id="topNoticeBar">
+        <a href="#perspective" onclick="triggerSubmersionWave(event)" style="text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 8px;" class="interactive-ctrl">
+          <span>A new perspective begins here.</span>
+          <span style="font-size: 13px;">→</span>
+        </a>
+      </div>
+
+      <!-- Primary CTA Button (Positioned dynamically over placeholder) -->
+      <div id="floatingPrimaryBtnContainer" style="position: absolute; left: 60px; top: 50%; pointer-events: auto;">
+        <a href="https://canva.link/ohcsrlcldvikukb" class="btn-primary-ocean" id="exploreOceanBtn" target="_blank" rel="noopener noreferrer">
+          <span>Explore now</span>
+          <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 6H13.5M13.5 6L8.8 1.3M13.5 6L8.8 10.7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- 4. Bottom Bar -->
+      <footer class="bottom-bar">
+        <button class="live-at-sea-ctrl interactive-ctrl" id="playPauseBtn" title="Pause / Play Ocean Cycle">
+          <span class="pause-circle" id="pauseCircleIcon">
+            <!-- Pause Icon II -->
+            <svg id="pauseSvg" width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1.5" y="1" width="2.2" height="10" rx="0.8" fill="white"/>
+              <rect x="6.3" y="1" width="2.2" height="10" rx="0.8" fill="white"/>
+            </svg>
+            <!-- Play Icon (Hidden when playing) -->
+            <svg id="playSvg" width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none; margin-left: 1.5px;">
+              <path d="M9.5 5.15C10.15 5.53 10.15 6.47 9.5 6.85L2.1 11.12C1.45 11.5 0.63 11.03 0.63 10.27V1.73C0.63 0.97 1.45 0.5 2.1 0.88L9.5 5.15Z" fill="white"/>
+            </svg>
+          </span>
+          <span class="bottom-label" id="liveStatusText">LIVE AT SEA</span>
+        </button>
+
+        <button class="scroll-explore-ctrl interactive-ctrl" onclick="toggleDiveDepth()">
+          <span class="bottom-label" id="scrollActionText">SCROLL TO EXPLORE</span>
+          <svg class="bounce-arrow" width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 1V11.5M6 11.5L1.5 7M6 11.5L10.5 7" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </footer>
+    </div>
+
+  </div>
+
+  <script>
+    /* ==========================================================================
+       1. ALIGNMENT OF PRIMARY BUTTON (LAYER 4) WITH HERO PLACEHOLDER (LAYER 2)
+       ========================================================================== */
+    const placeholderEl = document.getElementById('primaryBtnPlaceholder');
+    const floatingBtnContainer = document.getElementById('floatingPrimaryBtnContainer');
+
+    function syncPrimaryButtonPosition() {
+      if (!placeholderEl || !floatingBtnContainer) return;
+      const rect = placeholderEl.getBoundingClientRect();
+      floatingBtnContainer.style.left = `${rect.left}px`;
+      floatingBtnContainer.style.top = `${rect.top}px`;
+    }
+
+    window.addEventListener('resize', syncPrimaryButtonPosition);
+    window.addEventListener('DOMContentLoaded', () => {
+      syncPrimaryButtonPosition();
+      setTimeout(syncPrimaryButtonPosition, 100);
+    });
+
+    /* ==========================================================================
+       2. WEBGL GOLDEN-HOUR OCEAN SURFACE & UNDERWATER GOD-RAYS SHADER
+       ========================================================================== */
+    const bgCanvas = document.getElementById('bgCanvas');
+    const fgCanvas = document.getElementById('fgWaveCanvas');
+    const fgCtx = fgCanvas.getContext('2d');
+
+    const gl = bgCanvas.getContext('webgl', { alpha: false, antialias: true });
+
+    const vertexShaderSource = `
+      attribute vec2 a_position;
+      varying vec2 v_uv;
+      void main() {
+        v_uv = a_position * 0.5 + 0.5;
+        gl_Position = vec4(a_position, 0.0, 1.0);
+      }
+    `;
+
+    // Comprehensive GLSL Fragment Shader that renders:
+    // 1. Soft blue/peach sunset sky with realistic layered clouds & warm golden sun on the right horizon
+    // 2. Choppy, glistening dark ocean surface waves with golden specular path & foreground crest blur
+    // 3. Smooth wave meniscus wash-over transition (0:05 - 0:08 in video)
+    // 4. Deep teal/cyan underwater scene looking up at the rippling surface & piercing golden god-rays (0:09 - 0:14)
+    const fragmentShaderSource = `
+      precision highp float;
+      varying vec2 v_uv;
+      uniform vec2 u_resolution;
+      uniform float u_time;
+      uniform float u_submerge; // 0.0 = Above water sunset, 1.0 = Fully submerged underwater
+
+      // Fast procedural hash & noise functions
+      float hash(vec2 p) {
+        p = fract(p * vec2(123.34, 456.21));
+        p += dot(p, p + 45.32);
+        return fract(p.x * p.y);
+      }
+
+      float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        vec2 u = f * f * (3.0 - 2.0 * f);
+        return mix(
+          mix(hash(i + vec2(0.0, 0.0)), hash(i + vec2(1.0, 0.0)), u.x),
+          mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x),
+          u.y
+        );
+      }
+
+      // Fractal Brownian Motion for clouds and water ripples
+      float fbm(vec2 p) {
+        float v = 0.0;
+        float a = 0.5;
+        mat2 rot = mat2(0.8, 0.6, -0.6, 0.8);
+        for (int i = 0; i < 5; i++) {
+          v += a * noise(p);
+          p = rot * p * 2.03 + vec2(12.4, 7.1);
+          a *= 0.5;
+        }
+        return v;
+      }
+
+      // Specialized multi-directional wave height function
+      float waveHeight(vec2 p, float t) {
+        float w = 0.0;
+        w += sin(p.x * 1.4 + p.y * 0.8 + t * 1.6) * 0.35;
+        w += sin(p.x * 2.7 - p.y * 1.5 + t * 2.1) * 0.22;
+        w += sin(p.x * 5.3 + p.y * 3.2 - t * 2.8) * 0.12;
+        w += (noise(p * 3.5 + vec2(t * 0.8, -t * 0.6)) - 0.5) * 0.35;
+        w += (noise(p * 9.0 - vec2(t * 1.4, t * 1.1)) - 0.5) * 0.14;
+        return w;
+      }
+
+      void main() {
+        vec2 uv = v_uv;
+        float aspect = u_resolution.x / max(u_resolution.y, 1.0);
+        vec2 p = (uv - 0.5) * vec2(aspect, 1.0);
+
+        // Sun position matches video: right side, slightly above horizon
+        vec2 sunPos = vec2(0.765, 0.385);
+        vec2 sunDelta = (uv - sunPos) * vec2(aspect, 1.0);
+        float sunDist = length(sunDelta);
+
+        // Animated front wave crest that rises up the screen as u_submerge goes from 0 -> 1
+        // At u_submerge = 0.0, horizon is around y = 0.315
+        // Swell organic curve across screen X
+        float swellWave = sin(uv.x * 4.5 - u_time * 1.7) * 0.022
+                        + sin(uv.x * 9.0 + u_time * 2.3) * 0.010
+                        + (noise(vec2(uv.x * 6.0, u_time * 0.9)) - 0.5) * 0.018;
+
+        // Calculate the vertical position of the water surface meniscus on screen
+        // When u_submerge == 0: water line is at y = 0.315 (horizon) with foreground wave crests swelling up to 0.38
+        // When u_submerge == 0.5: water line cuts right across the middle of the screen (y ~ 0.65)
+        // When u_submerge == 1.0: water line is above the top of the screen (y > 1.15)
+        float baseWaterLine = mix(0.318, 1.22, smoothstep(0.0, 0.92, u_submerge));
+        
+        // Foreground wave surge (like at 0:00 and 0:05 in the video where a dark wave crest rises on the left/center)
+        float foregroundCrest = sin(u_time * 1.15) * 0.5 + 0.5;
+        float leftCrestBump = exp(-pow((uv.x - 0.28) * 3.2, 2.0)) * 0.085 * pow(foregroundCrest, 2.0) * (1.0 - u_submerge);
+
+        float waterLineY = baseWaterLine + swellWave + leftCrestBump;
+
+        // ====================================================================
+        // A. SKY & CLOUDS RENDERING (Above waterLineY)
+        // ====================================================================
+        // Upper sky soft slate-blue to warm golden-peach horizon
+        vec3 skyTop = vec3(0.42, 0.58, 0.78);
+        vec3 skyMid = vec3(0.66, 0.77, 0.88);
+        vec3 skyHorizon = vec3(0.97, 0.82, 0.64);
+
+        float skyGrad = clamp((uv.y - 0.30) / 0.70, 0.0, 1.0);
+        vec3 skyCol = mix(skyHorizon, skyMid, pow(skyGrad, 0.55));
+        skyCol = mix(skyCol, skyTop, pow(skyGrad, 1.35));
+
+        // Warm golden solar glow in the sky
+        float sunGlow = exp(-sunDist * 3.2) * 0.75 + exp(-sunDist * 9.5) * 0.65 + exp(-sunDist * 28.0) * 0.85;
+        skyCol += vec3(1.0, 0.72, 0.35) * sunGlow * 0.85;
+
+        // Perspective cloud plane
+        float cloudY = max(uv.y - 0.26, 0.02);
+        vec2 cloudUV = vec2((uv.x - 0.5) / pow(cloudY, 0.65) * 0.75, 1.2 / pow(cloudY, 0.55));
+        cloudUV.x += u_time * 0.015;
+
+        float cNoise1 = fbm(cloudUV * 1.35);
+        float cNoise2 = fbm(cloudUV * 2.8 - vec2(u_time * 0.02, 0.0));
+        float cloudDensity = smoothstep(0.43, 0.74, cNoise1 * 0.68 + cNoise2 * 0.32);
+        // Fade clouds near zenith and right at horizon
+        cloudDensity *= smoothstep(0.28, 0.42, uv.y) * smoothstep(0.98, 0.55, uv.y);
+
+        // Cloud lighting: dark blue-grey shadow base, warm peach/gold sunlit rims near the sun
+        vec3 cloudShadow = vec3(0.50, 0.60, 0.73);
+        vec3 cloudSunlit = mix(vec3(0.98, 0.90, 0.82), vec3(1.0, 0.78, 0.48), exp(-sunDist * 2.5));
+        float cloudRim = clamp(cNoise2 * 1.4, 0.0, 1.0);
+        vec3 cloudColor = mix(cloudShadow, cloudSunlit, cloudRim);
+
+        skyCol = mix(skyCol, cloudColor, cloudDensity * 0.78);
+        // Bright solar core
+        skyCol += vec3(1.0, 0.95, 0.80) * exp(-sunDist * 22.0) * 0.7;
+
+        // ====================================================================
+        // B. SURFACE OCEAN WAVES (When viewing above water)
+        // ====================================================================
+        // Perspective projection for the ocean surface below horizon
+        float surfY = clamp((waterLineY - uv.y) / max(waterLineY, 0.001), 0.002, 1.0);
+        float zDepth = 1.0 / (surfY + 0.035);
+        vec2 waterWorldPos = vec2((uv.x - 0.5) * aspect * zDepth * 0.75, zDepth * 1.15 - u_time * 0.95);
+
+        // Calculate wave normal via finite differences
+        float eps = 0.04;
+        float h0 = waveHeight(waterWorldPos, u_time);
+        float hx = waveHeight(waterWorldPos + vec2(eps, 0.0), u_time);
+        float hy = waveHeight(waterWorldPos + vec2(0.0, eps), u_time);
+        vec3 waveNormal = normalize(vec3((h0 - hx) / eps * 0.28, 1.0, (h0 - hy) / eps * 0.35));
+
+        // Base deep navy-teal ocean color
+        vec3 deepSeaCol = vec3(0.03, 0.14, 0.24);
+        vec3 troughCol  = vec3(0.06, 0.23, 0.34);
+        vec3 crestCol   = vec3(0.16, 0.38, 0.48);
+
+        float fresnel = pow(1.0 - clamp(surfY * 1.35, 0.0, 1.0), 3.0);
+        vec3 surfaceSea = mix(troughCol, deepSeaCol, clamp(surfY * 1.5, 0.0, 1.0));
+        surfaceSea = mix(surfaceSea, crestCol, smoothstep(-0.2, 0.45, h0) * 0.45);
+
+        // Sky reflection on water ripples
+        vec3 reflSky = mix(vec3(0.45, 0.62, 0.78), vec3(0.95, 0.78, 0.56), exp(-abs(uv.x - sunPos.x) * 3.2));
+        surfaceSea = mix(surfaceSea, reflSky, fresnel * 0.55);
+
+        // Golden Sunset Specular Glitter Path aligned with sunPos.x (x ~ 0.765)
+        float sunAlignX = abs(uv.x - sunPos.x + waveNormal.x * 0.16);
+        float glitterMask = exp(-sunAlignX * (10.0 + surfY * 18.0));
+        float sparkleNoise = noise(waterWorldPos * vec2(4.5, 8.0) + vec2(0.0, u_time * 3.0));
+        float specularSparkle = smoothstep(0.52, 0.88, sparkleNoise + h0 * 0.3) * glitterMask;
+
+        surfaceSea += vec3(1.0, 0.80, 0.42) * glitterMask * 0.42;
+        surfaceSea += vec3(1.0, 0.95, 0.78) * specularSparkle * 1.35;
+
+        // ====================================================================
+        // C. UNDERWATER SCENE: DEEP TEAL WATER, RIPPLING CEILING & GOD-RAYS
+        // ====================================================================
+        // Underwater depth gradient (bright turquoise near top surface, rich abyssal navy-teal at bottom)
+        float uwDepth = clamp((waterLineY - uv.y) / 1.1, 0.0, 1.0);
+        vec3 uwTopCol = vec3(0.11, 0.43, 0.56);
+        vec3 uwMidCol = vec3(0.04, 0.25, 0.38);
+        vec3 uwBotCol = vec3(0.02, 0.11, 0.20);
+
+        vec3 underwaterCol = mix(uwTopCol, uwMidCol, smoothstep(0.0, 0.48, 1.0 - uv.y));
+        underwaterCol = mix(underwaterCol, uwBotCol, smoothstep(0.42, 1.0, 1.0 - uv.y));
+
+        // Looking UP at the rippling water ceiling (Snell's window & golden surface refraction in upper 38% of screen)
+        float ceilingFactor = smoothstep(0.48, 0.98, uv.y);
+        vec2 ceilProj = vec2((uv.x - 0.5) * aspect / max(1.12 - uv.y, 0.12), 1.0 / max(1.12 - uv.y, 0.12));
+        float ceilRipples = fbm(ceilProj * 2.6 + vec2(u_time * 0.45, -u_time * 0.65));
+        float ceilFine = noise(ceilProj * 9.5 - vec2(u_time * 1.2, u_time * 0.9));
+
+        float ceilingCaustics = smoothstep(0.36, 0.76, ceilRipples * 0.7 + ceilFine * 0.3);
+        // Sunlit patch on the upper-right underwater surface
+        float uwSunSpot = exp(-length((uv - vec2(0.77, 0.86)) * vec2(aspect * 0.85, 1.4)) * 2.8);
+
+        vec3 ceilingTurquoise = vec3(0.32, 0.68, 0.78);
+        vec3 ceilingGold = vec3(1.0, 0.92, 0.68);
+        vec3 ceilingLayer = mix(underwaterCol, ceilingTurquoise, ceilingCaustics * 0.72);
+        ceilingLayer = mix(ceilingLayer, ceilingGold, ceilingCaustics * uwSunSpot * 0.92);
+        ceilingLayer += vec3(0.95, 0.82, 0.52) * uwSunSpot * 0.45;
+
+        underwaterCol = mix(underwaterCol, ceilingLayer, ceilingFactor);
+
+        // Volumetric Sunbeams / God-Rays piercing diagonally from upper-right (vec2(0.80, 1.08))
+        vec2 rayOrigin = vec2(0.80, 1.08);
+        vec2 dirToOrigin = (uv - rayOrigin) * vec2(aspect, 1.0);
+        float rayAngle = atan(dirToOrigin.y, dirToOrigin.x);
+        float rayDist = length(dirToOrigin);
+
+        // Multi-frequency animated shafts of light
+        float rayPattern1 = sin(rayAngle * 18.0 + u_time * 0.7 + noise(vec2(rayAngle * 8.0, u_time * 0.4)) * 3.5);
+        float rayPattern2 = sin(rayAngle * 34.0 - u_time * 1.1 + noise(vec2(rayAngle * 14.0, u_time * 0.6)) * 2.5);
+        float rayPattern3 = sin(rayAngle * 55.0 + u_time * 0.5);
+
+        float rays = pow(clamp(rayPattern1 * 0.5 + 0.5, 0.0, 1.0), 2.5) * 0.55
+                   + pow(clamp(rayPattern2 * 0.5 + 0.5, 0.0, 1.0), 3.0) * 0.32
+                   + pow(clamp(rayPattern3 * 0.5 + 0.5, 0.0, 1.0), 4.0) * 0.18;
+
+        // Attenuate god-rays with distance and focus them toward the right/center
+        float rayAtten = exp(-rayDist * 1.15) * smoothstep(0.05, 0.65, uv.x + 0.25);
+        vec3 godRayCol = mix(vec3(0.35, 0.82, 0.88), vec3(1.0, 0.88, 0.58), exp(-rayDist * 1.3));
+        underwaterCol += godRayCol * rays * rayAtten * 0.62;
+
+        // Subtle underwater floating micro-particles / bokeh
+        float speck1 = smoothstep(0.965, 0.995, noise(uv * vec2(85.0, 55.0) + vec2(u_time * 0.2, u_time * 0.35)));
+        underwaterCol += vec3(0.85, 0.96, 1.0) * speck1 * 0.35 * u_submerge;
+
+        // ====================================================================
+        // D. COMPOSITING SURFACE vs UNDERWATER & THE THICK WAVE MENISCUS
+        // ====================================================================
+        // Blend between surface water and deep underwater based on u_submerge
+        float uwBlend = smoothstep(0.18, 0.62, u_submerge);
+        vec3 waterBodyCol = mix(surfaceSea, underwaterCol, uwBlend);
+
+        // Meniscus band right at the air-water boundary when the wave washes over the camera (0:06 - 0:08)
+        float distToMeniscus = uv.y - waterLineY;
+        float meniscusThickness = mix(0.004, 0.045, sin(clamp(u_submerge, 0.0, 1.0) * 3.14159));
+
+        // Dark refractive internal reflection band + bright golden-white foam rim
+        float inMeniscus = exp(-pow(distToMeniscus / max(meniscusThickness, 0.002), 2.0));
+        vec3 meniscusDarkCol = vec3(0.02, 0.10, 0.18);
+        vec3 meniscusHighlight = vec3(0.88, 0.94, 0.98) + vec3(0.95, 0.72, 0.35) * exp(-abs(uv.x - sunPos.x) * 3.0);
+
+        // Combine sky above waterLineY and water below waterLineY
+        float isBelowWater = smoothstep(waterLineY + meniscusThickness * 0.4, waterLineY - meniscusThickness * 0.4, uv.y);
+        vec3 finalColor = mix(skyCol, waterBodyCol, isBelowWater);
+
+        // Apply thick glassy wave meniscus during submersion transition
+        float transitionIntensity = sin(clamp(u_submerge, 0.0, 1.0) * 3.14159);
+        finalColor = mix(finalColor, meniscusDarkCol, inMeniscus * 0.65 * transitionIntensity);
+        float rimLine = exp(-pow((distToMeniscus - meniscusThickness * 0.25) / 0.006, 2.0));
+        finalColor += meniscusHighlight * rimLine * 0.55 * transitionIntensity;
+
+        // Warm bokeh droplets on lens during wave wash-over (matches 0:07 in video)
+        if (transitionIntensity > 0.05) {
+          vec2 bokehUV = uv * vec2(aspect * 7.0, 7.0) - vec2(0.0, u_time * 0.4);
+          vec2 bId = floor(bokehUV);
+          vec2 bLocal = fract(bokehUV) - 0.5;
+          float bSeed = hash(bId);
+          if (bSeed > 0.76) {
+            float bRad = 0.12 + (bSeed - 0.76) * 0.9;
+            float bDist = length(bLocal);
+            float bokehDisc = smoothstep(bRad, bRad * 0.75, bDist) * (0.4 + 0.6 * smoothstep(bRad * 0.4, bRad * 0.9, bDist));
+            vec3 bokehCol = mix(vec3(0.75, 0.92, 1.0), vec3(1.0, 0.80, 0.42), exp(-abs(uv.x - sunPos.x) * 2.5));
+            finalColor += bokehCol * bokehDisc * transitionIntensity * 0.55;
+          }
+        }
+
+        gl_FragColor = vec4(finalColor, 1.0);
+      }
+    `;
+
+    function compileShader(gl, type, source) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error('Shader compilation error:', gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+      }
+      return shader;
+    }
+
+    const vs = compileShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+    const fs = compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+    const program = gl.createProgram();
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    const posBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+      gl.STATIC_DRAW
+    );
+
+    const posLoc = gl.getAttribLocation(program, 'a_position');
+    gl.enableVertexAttribArray(posLoc);
+    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+    const uResLoc = gl.getUniformLocation(program, 'u_resolution');
+    const uTimeLoc = gl.getUniformLocation(program, 'u_time');
+    const uSubmergeLoc = gl.getUniformLocation(program, 'u_submerge');
+
+    function resizeCanvases() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      bgCanvas.width = w * dpr;
+      bgCanvas.height = h * dpr;
+      gl.viewport(0, 0, bgCanvas.width, bgCanvas.height);
+
+      fgCanvas.width = w * dpr;
+      fgCanvas.height = h * dpr;
+      fgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      syncPrimaryButtonPosition();
+    }
+
+    window.addEventListener('resize', resizeCanvases);
+    resizeCanvases();
+
+    /* ==========================================================================
+       3. FOREGROUND WAVE OVERLAY (LAYER 3) & TEXT SUBMERSION REFRACTION
+       ========================================================================== */
+    // Replicates the exact 14-second video cycle:
+    // 0s - 5.2s : Surface sunset view with splashing foreground wave crest on left
+    // 5.2s - 8.5s: Wave swells up over the screen & hero text, while the primary CTA stays on top
+    // 8.5s - 14.0s: Submerged underwater view with sunbeams & subtle aquatic text refraction
+    let isPlaying = true;
+    let manualOverride = false;
+    let targetSubmerge = 0.0;
+    let currentSubmerge = 0.0;
+    let cycleTime = 0.0;
+    let lastTimestamp = performance.now();
+
+    const submersibleLayer = document.getElementById('submersibleLayer');
+    const refractDisplacement = document.getElementById('refractDisplacement');
+    const refractTurbulence = document.getElementById('refractTurbulence');
+    const topNoticeBar = document.getElementById('topNoticeBar');
+    const liveStatusText = document.getElementById('liveStatusText');
+    const scrollActionText = document.getElementById('scrollActionText');
+
+    function computeAutoSubmerge(t) {
+      // 16-second seamless loop mirroring the reference video
+      const loopDur = 16.0;
+      const phase = t % loopDur;
+
+      if (phase < 5.0) {
+        // 0:00 - 0:05: Surface sunset view with gentle breathing
+        return 0.0;
+      } else if (phase < 8.4) {
+        // 0:05 - 0:08.4: Smooth wave submersion rising over the camera
+        const p = (phase - 5.0) / 3.4;
+        return p * p * (3.0 - 2.0 * p); // smoothstep
+      } else if (phase < 13.8) {
+        // 0:08.4 - 0:13.8: Underwater god-rays state
+        return 1.0;
+      } else {
+        // 0:13.8 - 0:16.0: Smooth resurfacing back to sunset
+        const p = (phase - 13.8) / 2.2;
+        return 1.0 - p * p * (3.0 - 2.0 * p);
+      }
+    }
+
+    // Draws the translucent foreground water wave meniscus & splashing foam droplets on Layer 3
+    // (Sits OVER the hero typography, and UNDER the solid primary CTA)
+    function renderForegroundWaveLayer(t, submerge) {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      fgCtx.clearRect(0, 0, w, h);
+
+      // Calculate screen Y coordinate of the water meniscus (0 = top, h = bottom)
+      const smoothSub = Math.min(Math.max(submerge / 0.92, 0.0), 1.0);
+      const baseWaterNormalized = 0.318 + (1.22 - 0.318) * (smoothSub * smoothSub * (3.0 - 2.0 * smoothSub));
+      const meniscusScreenY = h * (1.0 - baseWaterNormalized);
+
+      // 1. Foreground splashing wave crest at 0:00 - 0:02 (bottom-left blurred golden-lit wave crest)
+      if (submerge < 0.25) {
+        const splashCycle = Math.max(0, Math.sin(t * 1.15));
+        const splashHeight = Math.pow(splashCycle, 2.2) * h * 0.22 * (1.0 - submerge * 4.0);
+
+        if (splashHeight > 4) {
+          fgCtx.save();
+          const crestX = w * 0.29;
+          const crestY = h - splashHeight * 0.45;
+          const grad = fgCtx.createRadialGradient(crestX, crestY, 10, crestX, crestY, w * 0.22);
+          grad.addColorStop(0, 'rgba(255, 215, 145, 0.42)');
+          grad.addColorStop(0.45, 'rgba(18, 48, 68, 0.55)');
+          grad.addColorStop(1, 'rgba(10, 32, 50, 0)');
+
+          fgCtx.fillStyle = grad;
+          fgCtx.beginPath();
+          fgCtx.ellipse(crestX, crestY, w * 0.22, splashHeight * 0.85, -0.08, 0, Math.PI * 2);
+          fgCtx.fill();
+          fgCtx.restore();
+        }
+      }
+
+      // 2. Translucent Water Wash-Over & Meniscus Band over the Hero Typography (0:05.5 - 0:09)
+      if (submerge > 0.02) {
+        fgCtx.save();
+        fgCtx.beginPath();
+        fgCtx.moveTo(0, h);
+        fgCtx.lineTo(0, meniscusScreenY);
+
+        const steps = 40;
+        for (let i = 0; i <= steps; i++) {
+          const xRatio = i / steps;
+          const x = xRatio * w;
+          const waveOffset =
+            Math.sin(xRatio * 4.5 - t * 1.7) * (h * 0.022) +
+            Math.sin(xRatio * 9.0 + t * 2.3) * (h * 0.01);
+          fgCtx.lineTo(x, meniscusScreenY - waveOffset);
+        }
+
+        fgCtx.lineTo(w, h);
+        fgCtx.closePath();
+
+        // During the wave crest transition (submerge between 0.15 and 0.85), the meniscus has higher opacity
+        // so it visibly washes over the hero text, then settles into crystal-clear underwater
+        const midTransition = Math.sin(Math.min(Math.max(submerge, 0), 1) * Math.PI);
+        const meniscusGrad = fgCtx.createLinearGradient(0, meniscusScreenY - 40, 0, meniscusScreenY + 220);
+
+        const crestAlpha = (0.58 * midTransition + 0.06 * submerge).toFixed(3);
+        const bodyAlpha = (0.34 * midTransition + 0.05 * submerge).toFixed(3);
+
+        meniscusGrad.addColorStop(0, `rgba(210, 240, 250, ${(0.35 * midTransition).toFixed(3)})`);
+        meniscusGrad.addColorStop(0.15, `rgba(9, 42, 66, ${crestAlpha})`);
+        meniscusGrad.addColorStop(0.5, `rgba(14, 78, 106, ${bodyAlpha})`);
+        meniscusGrad.addColorStop(1, `rgba(12, 65, 92, ${(0.04 * submerge).toFixed(3)})`);
+
+        fgCtx.fillStyle = meniscusGrad;
+        fgCtx.fill();
+
+        // Sparkling foam beads along the meniscus wave line
+        if (midTransition > 0.1) {
+          for (let i = 0; i < 24; i++) {
+            const seed = (i * 73.19) % 1;
+            const bx = ((seed + t * 0.03 * (i % 2 === 0 ? 1 : -1)) % 1 + 1) % 1 * w;
+            const waveY =
+              meniscusScreenY -
+              Math.sin((bx / w) * 4.5 - t * 1.7) * (h * 0.022) +
+              ((i * 19.3) % 28 - 10);
+            const r = 1.2 + (i % 4) * 1.1;
+
+            fgCtx.beginPath();
+            fgCtx.arc(bx, waveY, r, 0, Math.PI * 2);
+            fgCtx.fillStyle = `rgba(255, 248, 225, ${(0.55 * midTransition).toFixed(3)})`;
+            fgCtx.fill();
+          }
+        }
+
+        fgCtx.restore();
+      }
+    }
+
+    // Updates subtle underwater refraction & styling on the Hero Typography Layer
+    function updateTypographyImmersion(t, submerge) {
+      const midWave = Math.sin(Math.min(Math.max(submerge, 0), 1) * Math.PI);
+
+      // Apply SVG displacement filter when wave washes over or when underwater
+      if (submerge > 0.04) {
+        submersibleLayer.style.filter = `url(#water-refraction-filter) blur(${(midWave * 1.35).toFixed(2)}px)`;
+        // Animate turbulence phase for living underwater shimmer
+        const freqX = (0.01 + Math.sin(t * 0.8) * 0.002).toFixed(4);
+        const freqY = (0.025 + Math.cos(t * 0.7) * 0.004).toFixed(4);
+        refractTurbulence.setAttribute('baseFrequency', `${freqX} ${freqY}`);
+        // Stronger refraction as the wave crest crosses the text (0:06-0:08), gentle ripple once fully underwater
+        const displacementScale = (midWave * 18.0 + submerge * 3.2).toFixed(1);
+        refractDisplacement.setAttribute('scale', displacementScale);
+      } else {
+        submersibleLayer.style.filter = 'none';
+        refractDisplacement.setAttribute('scale', '0');
+      }
+
+      // Top notification bar stays legible against both sky and underwater surface
+      if (submerge > 0.04) {
+        submersibleLayer.classList.add('underwater-mode');
+      } else {
+        submersibleLayer.classList.remove('underwater-mode');
+      }
+
+      if (submerge > 0.72) {
+        topNoticeBar.classList.add('underwater-mode');
+      } else {
+        topNoticeBar.classList.remove('underwater-mode');
+      }
+    }
+
+    /* ==========================================================================
+       4. MAIN ANIMATION LOOP & INTERACTIVE CONTROLS
+       ========================================================================== */
+    function animate(now) {
+      const dt = Math.min((now - lastTimestamp) / 1000, 0.1);
+      lastTimestamp = now;
+
+      if (isPlaying) {
+        cycleTime += dt;
+        if (!manualOverride) {
+          targetSubmerge = computeAutoSubmerge(cycleTime);
+        }
+      }
+
+      // Smooth interpolation toward targetSubmerge
+      currentSubmerge += (targetSubmerge - currentSubmerge) * Math.min(dt * 4.5, 1.0);
+
+      // Render Layer 1: WebGL Sky, Ocean Waves & Underwater God-Rays
+      gl.uniform2f(uResLoc, bgCanvas.width, bgCanvas.height);
+      gl.uniform1f(uTimeLoc, cycleTime);
+      gl.uniform1f(uSubmergeLoc, currentSubmerge);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+      // Render Layer 2: Typography Refraction
+      updateTypographyImmersion(cycleTime, currentSubmerge);
+
+      // Render Layer 3: Foreground Meniscus Wave (Over text, under primary CTA button)
+      renderForegroundWaveLayer(cycleTime, currentSubmerge);
+
+      requestAnimationFrame(animate);
+    }
+
+    // Interactive Controls: Scroll wheel to manually submerge / surface
+    window.addEventListener('wheel', (e) => {
+      manualOverride = true;
+      targetSubmerge = Math.min(Math.max(targetSubmerge + e.deltaY * 0.0012, 0.0), 1.0);
+      updateStatusLabels();
+    }, { passive: true });
+
+    // Touch swipe support for mobile/tablet
+    let touchStartY = null;
+    window.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (touchStartY !== null && e.touches.length === 1) {
+        const dy = touchStartY - e.touches[0].clientY;
+        touchStartY = e.touches[0].clientY;
+        manualOverride = true;
+        targetSubmerge = Math.min(Math.max(targetSubmerge + dy * 0.003, 0.0), 1.0);
+        updateStatusLabels();
+      }
+    }, { passive: true });
+
+    function toggleDiveDepth() {
+      manualOverride = true;
+      if (targetSubmerge < 0.5) {
+        targetSubmerge = 1.0;
+      } else {
+        targetSubmerge = 0.0;
+      }
+      updateStatusLabels();
+    }
+
+    function setTargetSubmersion(val) {
+      manualOverride = true;
+      targetSubmerge = val;
+      updateStatusLabels();
+    }
+
+    function triggerSubmersionWave(e) {
+      if (e) e.preventDefault();
+      toggleDiveDepth();
+    }
+
+    function updateStatusLabels() {
+      if (targetSubmerge > 0.5) {
+        scrollActionText.textContent = 'SCROLL TO SURFACE';
+      } else {
+        scrollActionText.textContent = 'SCROLL TO EXPLORE';
+      }
+    }
+
+    // Bottom-left Pause / Play button ("II LIVE AT SEA")
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const pauseSvg = document.getElementById('pauseSvg');
+    const playSvg = document.getElementById('playSvg');
+
+    playPauseBtn.addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      if (isPlaying) {
+        manualOverride = false; // Resume automatic video cycle
+        pauseSvg.style.display = 'block';
+        playSvg.style.display = 'none';
+        liveStatusText.textContent = 'LIVE AT SEA';
+      } else {
+        pauseSvg.style.display = 'none';
+        playSvg.style.display = 'block';
+        liveStatusText.textContent = 'PAUSED AT SEA';
+      }
+    });
+
+    /* ==========================================================================
+       5. EYE INTRO & TRANSITION INTO THE EXISTING UNDERWATER CYCLE
+       ========================================================================== */
+    const eyeLoading = document.getElementById('eyeLoading');
+    const eyeLoadingBar = document.getElementById('eyeLoadingBar');
+    const eyeIntro = document.getElementById('eyeIntro');
+    const eyeIntroFilm = document.getElementById('eyeIntroFilm');
+    const skipEyeIntro = document.getElementById('skipEyeIntro');
+    const eyeLoadingStartedAt = performance.now();
+    let eyeLoadingReady = false;
+    let eyeLoadingFinished = false;
+    let eyeLoadingFinishTimer;
+    let eyeLoadingBackstopTimer;
+    let eyeIntroFinished = false;
+    let eyeIntroEndTimer;
+    let eyeIntroFallbackTimer;
+    let eyeIntroBackstopTimer;
+
+    requestAnimationFrame(() => {
+      eyeLoadingBar.style.transform = 'scaleX(0.35)';
+    });
+
+    function finishEyeLoading() {
+      if (eyeLoadingFinished) return;
+      eyeLoadingFinished = true;
+      clearTimeout(eyeLoadingBackstopTimer);
+      eyeLoading.classList.add('loaded');
+      eyeLoading.classList.add('out');
+      setTimeout(() => {
+        eyeLoading.remove();
+        startEyeIntro();
+      }, 650);
+    }
+
+    function onEyeIntroReady() {
+      if (eyeLoadingReady) return;
+      eyeLoadingReady = true;
+      clearTimeout(eyeLoadingBackstopTimer);
+      eyeLoading.classList.add('loaded');
+      const elapsed = performance.now() - eyeLoadingStartedAt;
+      eyeLoadingFinishTimer = setTimeout(finishEyeLoading, Math.max(0, 1150 - elapsed));
+    }
+
+    eyeIntroFilm.addEventListener('loadeddata', onEyeIntroReady, { once: true });
+    eyeIntroFilm.addEventListener('canplay', onEyeIntroReady, { once: true });
+    eyeIntroFilm.addEventListener('error', onEyeIntroReady, { once: true });
+    eyeLoadingBackstopTimer = setTimeout(() => {
+      eyeIntro.classList.add('no-video');
+      onEyeIntroReady();
+    }, 9000);
+
+    function revealOceanFromEye() {
+      if (eyeIntroFinished) return;
+      eyeIntroFinished = true;
+      clearTimeout(eyeLoadingFinishTimer);
+      clearTimeout(eyeIntroEndTimer);
+      clearTimeout(eyeIntroFallbackTimer);
+      clearTimeout(eyeIntroBackstopTimer);
+      if (!eyeLoadingFinished) finishEyeLoading();
+      eyeIntro.classList.add('closing');
+
+      setTimeout(() => {
+        cycleTime = 8.4;
+        targetSubmerge = 1;
+        currentSubmerge = 1;
+        manualOverride = false;
+        updateStatusLabels();
+        eyeIntro.classList.add('gone');
+        eyeIntroFilm.pause();
+        setTimeout(() => {
+          eyeIntro.hidden = true;
+        }, 1300);
+      }, 800);
+    }
+
+    function scheduleEyeIntroEnd() {
+      clearTimeout(eyeIntroEndTimer);
+      if (Number.isFinite(eyeIntroFilm.duration) && eyeIntroFilm.duration > 0) {
+        const remaining = Math.max(500, (eyeIntroFilm.duration - eyeIntroFilm.currentTime - 0.35) * 500);
+        eyeIntroEndTimer = setTimeout(revealOceanFromEye, remaining);
+      }
+    }
+
+    eyeIntroFilm.addEventListener('playing', () => {
+      eyeIntroFilm.playbackRate = 2;
+      scheduleEyeIntroEnd();
+    });
+    eyeIntroFilm.addEventListener('ended', revealOceanFromEye, { once: true });
+    eyeIntroFilm.addEventListener('error', () => {
+      eyeIntro.classList.add('no-video');
+      onEyeIntroReady();
+    }, { once: true });
+    skipEyeIntro.addEventListener('click', revealOceanFromEye);
+
+    function startEyeIntro() {
+      if (eyeIntroFinished) return;
+      eyeIntroBackstopTimer = setTimeout(revealOceanFromEye, 14000);
+      if (eyeIntro.classList.contains('no-video')) {
+        eyeIntroFallbackTimer = setTimeout(revealOceanFromEye, 2400);
+        return;
+      }
+
+      eyeIntroFilm.playbackRate = 2;
+      const eyePlayPromise = eyeIntroFilm.play();
+      if (eyePlayPromise !== undefined) {
+        eyePlayPromise.catch(() => {
+          eyeIntro.classList.add('no-video');
+          eyeIntroFallbackTimer = setTimeout(revealOceanFromEye, 2400);
+        });
+      }
+    }
+
+    if (eyeIntroFilm.readyState >= 2) onEyeIntroReady();
+
+    window.onload = function () {
+      syncPrimaryButtonPosition();
+      requestAnimationFrame(animate);
+    };
+  </script>
+</body>
+</html>
