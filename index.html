@@ -95,120 +95,41 @@
       animation: loadingRiseIn 0.9s cubic-bezier(.22, .61, .36, 1) 0.7s forwards;
     }
 
+    #eyeLoading .loading-start {
+      min-height: 46px;
+      margin-top: 4px;
+      padding: 12px 24px;
+      border: 1px solid rgba(244, 242, 239, 0.52);
+      border-radius: 999px;
+      background: transparent;
+      color: #f4f2ef;
+      font: inherit;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0;
+      pointer-events: none;
+      cursor: pointer;
+      transition: opacity 0.35s ease, background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    #eyeLoading .loading-start:hover {
+      border-color: #f4f2ef;
+      background: rgba(244, 242, 239, 0.1);
+    }
+
+    #eyeLoading.ready .loading-start {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     @keyframes loadingRiseIn {
       from { opacity: 0; transform: translateY(9px); }
       to { opacity: 1; transform: none; }
     }
 
-    #eyeIntro {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      overflow: hidden;
-      display: grid;
-      place-items: center;
-      background: #000;
-      opacity: 1;
-      transition: opacity 1.25s ease;
-    }
-
-    #eyeIntro video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background: #000;
-    }
-
-    #eyeIntro .fallback {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      background: radial-gradient(ellipse at 50% 48%, #123d67 0%, #061a30 42%, #000 78%);
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-
-    #eyeIntro.no-video .fallback {
-      opacity: 1;
-    }
-
-    .intro-eye {
-      position: relative;
-      width: clamp(150px, 32vw, 420px);
-      aspect-ratio: 2 / 1;
-      border-radius: 50%;
-      background: #d7e8f5;
-      clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%);
-      animation: eyeOpen 1.2s cubic-bezier(.22, .61, .36, 1) both;
-    }
-
-    .intro-iris {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 37%;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      background: radial-gradient(circle, #020912 0 24%, #0a2845 26% 38%, #38a5d1 42% 52%, #123c64 63%, #061a30 75%);
-      box-shadow: 0 0 34px rgba(65, 176, 229, 0.5);
-    }
-
-    @keyframes eyeOpen {
-      from { transform: scaleY(0.04); }
-      to { transform: scaleY(1); }
-    }
-
-    #eyeIntro::after {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      background: #000;
-      content: "";
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.8s ease;
-    }
-
-    #eyeIntro.closing::after {
-      opacity: 1;
-    }
-
-    #eyeIntro.gone {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    #eyeIntro .skip-intro {
-      position: absolute;
-      right: 28px;
-      bottom: 28px;
-      z-index: 2;
-      min-height: 44px;
-      padding: 10px 18px;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      border-radius: 999px;
-      background: rgba(0, 0, 0, 0.18);
-      color: rgba(255, 255, 255, 0.82);
-      font: inherit;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-    }
-
-    #eyeIntro.closing .skip-intro {
-      opacity: 0;
-      pointer-events: none;
-    }
-
     @media (prefers-reduced-motion: reduce) {
-      #eyeLoading,
-      #eyeIntro,
-      #eyeIntro::after {
+      #eyeLoading {
         transition-duration: 0.2s;
       }
 
@@ -221,9 +142,6 @@
         transition-duration: 0.2s;
       }
 
-      .intro-eye {
-        animation-duration: 0.2s;
-      }
     }
 
     /* ==========================================
@@ -576,23 +494,8 @@
   <div id="eyeLoading" role="status" aria-live="polite" aria-label="Cargando animación">
     <div class="loading-brand">Zapatería Aysel</div>
     <div class="loading-bar" aria-hidden="true"><span class="loading-bar-fill" id="eyeLoadingBar"></span></div>
-    <div class="loading-caption">Preparando la experiencia</div>
-  </div>
-
-  <div id="eyeIntro" aria-label="Eye intro animation">
-    <video
-      id="eyeIntroFilm"
-      src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260922_195107_ed3f055a-3a13-4a71-b743-e10310454246.mp4"
-      muted
-      playsinline
-      preload="auto"
-      disablepictureinpicture
-      aria-hidden="true"
-    ></video>
-    <div class="fallback" aria-hidden="true">
-      <div class="intro-eye"><span class="intro-iris"></span></div>
-    </div>
-    <button class="skip-intro" id="skipEyeIntro" type="button">Skip</button>
+    <div class="loading-caption" id="eyeLoadingCaption">Preparando la experiencia</div>
+    <button class="loading-start" id="startEyeExperience" type="button" disabled>Iniciar experiencia</button>
   </div>
 
   <!-- SVG Filters for Realistic Underwater Text Refraction & Meniscus Distortion -->
@@ -633,7 +536,7 @@
             <a href="#journal" class="nav-link" onclick="triggerSubmersionWave(event)">Journal</a>
           </div>
 
-          <a href="https://canva.link/ohcsrlcldvikukb" class="nav-cta-pill" id="navCtaPill" target="_blank" rel="noopener noreferrer">
+          <a href="https://canva.link/us5vyfxeviir1et" class="nav-cta-pill" id="navCtaPill" target="_blank" rel="noopener noreferrer">
             <span>Explore now</span>
             <svg width="11" height="11" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M2.5 9.5L9.5 2.5M9.5 2.5H3.5M9.5 2.5V8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -674,7 +577,7 @@
 
       <!-- Primary CTA Button (Positioned dynamically over placeholder) -->
       <div id="floatingPrimaryBtnContainer" style="position: absolute; left: 60px; top: 50%; pointer-events: auto;">
-        <a href="https://canva.link/ohcsrlcldvikukb" class="btn-primary-ocean" id="exploreOceanBtn" target="_blank" rel="noopener noreferrer">
+        <a href="https://canva.link/us5vyfxeviir1et" class="btn-primary-ocean" id="exploreOceanBtn" target="_blank" rel="noopener noreferrer">
           <span>Explore now</span>
           <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 6H13.5M13.5 6L8.8 1.3M13.5 6L8.8 10.7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1331,22 +1234,17 @@
     });
 
     /* ==========================================================================
-       5. EYE INTRO & TRANSITION INTO THE EXISTING UNDERWATER CYCLE
+       5. EXPERIENCE START & OCEAN TRANSITION
        ========================================================================== */
     const eyeLoading = document.getElementById('eyeLoading');
     const eyeLoadingBar = document.getElementById('eyeLoadingBar');
-    const eyeIntro = document.getElementById('eyeIntro');
-    const eyeIntroFilm = document.getElementById('eyeIntroFilm');
-    const skipEyeIntro = document.getElementById('skipEyeIntro');
+    const eyeLoadingCaption = document.getElementById('eyeLoadingCaption');
+    const startEyeExperience = document.getElementById('startEyeExperience');
     const eyeLoadingStartedAt = performance.now();
     let eyeLoadingReady = false;
     let eyeLoadingFinished = false;
+    let experienceStarted = false;
     let eyeLoadingFinishTimer;
-    let eyeLoadingBackstopTimer;
-    let eyeIntroFinished = false;
-    let eyeIntroEndTimer;
-    let eyeIntroFallbackTimer;
-    let eyeIntroBackstopTimer;
 
     requestAnimationFrame(() => {
       eyeLoadingBar.style.transform = 'scaleX(0.35)';
@@ -1355,98 +1253,42 @@
     function finishEyeLoading() {
       if (eyeLoadingFinished) return;
       eyeLoadingFinished = true;
-      clearTimeout(eyeLoadingBackstopTimer);
+      clearTimeout(eyeLoadingFinishTimer);
       eyeLoading.classList.add('loaded');
       eyeLoading.classList.add('out');
       setTimeout(() => {
         eyeLoading.remove();
-        startEyeIntro();
       }, 650);
     }
 
-    function onEyeIntroReady() {
+    function onExperienceReady() {
       if (eyeLoadingReady) return;
       eyeLoadingReady = true;
-      clearTimeout(eyeLoadingBackstopTimer);
       eyeLoading.classList.add('loaded');
       const elapsed = performance.now() - eyeLoadingStartedAt;
-      eyeLoadingFinishTimer = setTimeout(finishEyeLoading, Math.max(0, 1150 - elapsed));
+      eyeLoadingFinishTimer = setTimeout(() => {
+        eyeLoadingCaption.textContent = 'Pulsa para comenzar';
+        startEyeExperience.disabled = false;
+        eyeLoading.classList.add('ready');
+      }, Math.max(0, 1150 - elapsed));
     }
 
-    eyeIntroFilm.addEventListener('loadeddata', onEyeIntroReady, { once: true });
-    eyeIntroFilm.addEventListener('canplay', onEyeIntroReady, { once: true });
-    eyeIntroFilm.addEventListener('error', onEyeIntroReady, { once: true });
-    eyeLoadingBackstopTimer = setTimeout(() => {
-      eyeIntro.classList.add('no-video');
-      onEyeIntroReady();
-    }, 9000);
+    onExperienceReady();
 
-    function revealOceanFromEye() {
-      if (eyeIntroFinished) return;
-      eyeIntroFinished = true;
-      clearTimeout(eyeLoadingFinishTimer);
-      clearTimeout(eyeIntroEndTimer);
-      clearTimeout(eyeIntroFallbackTimer);
-      clearTimeout(eyeIntroBackstopTimer);
-      if (!eyeLoadingFinished) finishEyeLoading();
-      eyeIntro.classList.add('closing');
-
-      setTimeout(() => {
-        cycleTime = 8.4;
-        targetSubmerge = 1;
-        currentSubmerge = 1;
-        manualOverride = false;
-        updateStatusLabels();
-        eyeIntro.classList.add('gone');
-        eyeIntroFilm.pause();
-        setTimeout(() => {
-          eyeIntro.hidden = true;
-        }, 1300);
-      }, 800);
-    }
-
-    function scheduleEyeIntroEnd() {
-      clearTimeout(eyeIntroEndTimer);
-      if (Number.isFinite(eyeIntroFilm.duration) && eyeIntroFilm.duration > 0) {
-        const remaining = Math.max(500, (eyeIntroFilm.duration - eyeIntroFilm.currentTime - 0.35) * 500);
-        eyeIntroEndTimer = setTimeout(revealOceanFromEye, remaining);
-      }
-    }
-
-    eyeIntroFilm.addEventListener('playing', () => {
-      eyeIntroFilm.playbackRate = 2;
-      scheduleEyeIntroEnd();
+    startEyeExperience.addEventListener('click', () => {
+      if (experienceStarted) return;
+      experienceStarted = true;
+      cycleTime = 5.0;
+      currentSubmerge = 0;
+      targetSubmerge = 0;
+      manualOverride = false;
+      lastTimestamp = performance.now();
+      requestAnimationFrame(animate);
+      finishEyeLoading();
     });
-    eyeIntroFilm.addEventListener('ended', revealOceanFromEye, { once: true });
-    eyeIntroFilm.addEventListener('error', () => {
-      eyeIntro.classList.add('no-video');
-      onEyeIntroReady();
-    }, { once: true });
-    skipEyeIntro.addEventListener('click', revealOceanFromEye);
-
-    function startEyeIntro() {
-      if (eyeIntroFinished) return;
-      eyeIntroBackstopTimer = setTimeout(revealOceanFromEye, 14000);
-      if (eyeIntro.classList.contains('no-video')) {
-        eyeIntroFallbackTimer = setTimeout(revealOceanFromEye, 2400);
-        return;
-      }
-
-      eyeIntroFilm.playbackRate = 2;
-      const eyePlayPromise = eyeIntroFilm.play();
-      if (eyePlayPromise !== undefined) {
-        eyePlayPromise.catch(() => {
-          eyeIntro.classList.add('no-video');
-          eyeIntroFallbackTimer = setTimeout(revealOceanFromEye, 2400);
-        });
-      }
-    }
-
-    if (eyeIntroFilm.readyState >= 2) onEyeIntroReady();
 
     window.onload = function () {
       syncPrimaryButtonPosition();
-      requestAnimationFrame(animate);
     };
   </script>
 </body>
